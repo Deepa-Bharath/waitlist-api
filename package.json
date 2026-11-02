@@ -1,0 +1,29 @@
+{
+  "name": "waitlist-api",
+  "version": "1.0.0",
+  "description": "Backend of a digital restaurant waitlist",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "typecheck": "tsc",
+    "test": "node --test \"src/**/*.test.ts\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Deepa-Bharath/waitlist-api.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/Deepa-Bharath/waitlist-api/issues"
+  },
+  "homepage": "https://github.com/Deepa-Bharath/waitlist-api#readme",
+  "devDependencies": {
+    "@types/node": "^24.19.2",
+    "typescript": "^7.0.2"
+  }
+}
