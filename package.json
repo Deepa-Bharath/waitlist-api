@@ -9,7 +9,9 @@
   },
   "scripts": {
     "typecheck": "tsc",
-    "test": "vitest run"
+    "test": "vitest run",
+    "format": "prettier --write src test .github",
+    "format:check": "prettier --check src test .github"
   },
   "repository": {
     "type": "git",
@@ -24,6 +26,7 @@
   "homepage": "https://github.com/Deepa-Bharath/waitlist-api#readme",
   "devDependencies": {
     "@types/node": "^24.19.2",
+    "prettier": "^3.9.10",
     "typescript": "^7.0.2",
     "vitest": "^5.1.0"
   }
