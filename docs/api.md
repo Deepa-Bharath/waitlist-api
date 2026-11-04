@@ -148,8 +148,13 @@ WhatsApp* (opens `whatsappUrl`) and *Join here* (the form below). See "WhatsApp 
 Body `{ name, phone, size, idempotencyKey }` →
 `201 { "ticket": "A-17", "statusUrl": "/q/<token>" }`.
 Errors: `409 ALREADY_IN_QUEUE`, `410 QR_EXPIRED`, `400 BAD_INPUT`.
-`phone` (here and in a walk-in): drop every non-digit, then drop a leading `0` from 11 digits. 10 digits
-→ `+91` + digits; 12 digits starting `91` → `+` + digits; anything else → `400 BAD_INPUT`.
+`phone` (here and in a walk-in): India only for now. The web form shows a fixed `+91` and sends exactly
+10 digits. The server accepts only `^[6-9][0-9]{9}$`: 10 digits, no symbols, no spaces, no country code,
+no leading `0`, and the first digit is 6, 7, 8 or 9 (mobile numbers start with 6–9, which stops
+`1234567890` and `0000000000`). Anything else → `400 BAD_INPUT`, and the server does not try to repair it.
+It is stored as `+91` + digits (`phone_e164`). The form's own check only gives the guest a clearer message
+first; the server always checks. The WhatsApp channel does not send this field: the server takes the number
+from `wa_id` itself (see "WhatsApp channel").
 The same `idempotencyKey` again returns the same `201` body.
 
 ### `GET /api/q/:token/status?v=41`

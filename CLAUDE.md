@@ -43,7 +43,7 @@ Compatibility rules (design.md §3): responses only grow, add before you remove,
 - The board carries `now` (server time). The frontend corrects the device clock with it, so `heldUntil`, `stateSince` and `joinedAt` must be server times in UTC.
 - Errors are `{ code, message }`. The page shows its own text per `code` (English or Tamil), so a new error needs a new code, and the frontend needs its text.
 - Create requests carry `idempotencyKey`; the same key again returns the first answer.
-- Phone rule: see `POST /api/join/...` in `docs/api.md` (strip non-digits, drop a leading 0 from 11 digits, then 10 digits or `91` + 10).
+- Phone rule: see `POST /api/join/...` in `docs/api.md` (exactly 10 digits, `^[6-9][0-9]{9}$`, else `400 BAD_INPUT`; nothing is stripped or repaired).
 - Writes (POST, PATCH, DELETE) arrive with `x-amz-content-sha256`: CloudFront OAC signs the request but does not hash the body.
 - Frontend-side checks (`web/src/lib/validate.ts`) only give a clearer message first; the server checks everything again.
 
@@ -69,11 +69,11 @@ Compatibility rules (design.md §3): responses only grow, add before you remove,
 - Every state change bumps `queue_version` and writes one `outbox` row in the same transaction.
 - Allocation is a rule, not AI (§8). AI only predicts (the ETA) and explains.
 - TypeScript strict. Node 24 runs `.ts` by stripping the types, so use `erasableSyntaxOnly` (no `enum`, `namespace` or parameter properties) and import with `.ts` extensions.
-- Tests use `node:test`; nothing extra to install.
+- Tests use **Vitest** (decided 4 Nov): Jest-style `describe`/`it`/`expect`, and it runs ESM + TypeScript with `.ts` imports without a transform. Jest was rejected (needs a transform and experimental ESM flags). Tests live in a separate `test/` folder that mirrors `src/` (`test/domain/phone.test.ts` tests `src/domain/phone.ts`); integration tests that need Postgres go in `test/integration/`. `tsconfig` includes both `src` and `test`. Domain rules take `now` and random values as arguments, so tests need no fake timers.
 - **Zero rupees in AWS** (§13): Lambda, SQS, EventBridge, CloudFront, standard Parameter Store, basic CloudWatch. The only paid exception is S3 under ₹1 a month. Never create a NAT gateway, ALB, RDS, EC2, public IPv4, interface endpoint, customer-managed KMS key or API Gateway.
 - No containers: the development machine cannot run Docker, Podman or kind.
 - Secrets never go in Git: `.env` locally (gitignored), Parameter Store when hosted.
 
 ## Commands
 
-None yet. Session 7a adds `package.json`, the type check and `node --test`, and CI.
+None yet. Session 7a adds `package.json`, the type check and `vitest run`, and CI.
